@@ -8,7 +8,10 @@ import { FaRegEnvelope } from "react-icons/fa";
 import React from "react";
 import FeedCard from "@/components/FeedCard";
 import { CiCircleMore } from "react-icons/ci";
-import { GoogleLogin } from "@react-oauth/google";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { graphqlClient } from "@/clients/api";
+import { generateGoogleAuthToken } from "@/graphql/query/user";
+import { gql, request } from "graphql-request";
 
 interface navbarType {
   title: string;
@@ -94,10 +97,16 @@ function XFeed() {
   );
 }
 function PeopleRecommendation() {
+  async function handleSuccessGoogleLogin(cred: CredentialResponse) {
+    if (!cred || !cred.credential) return console.error("failed to login");
+    const data = await graphqlClient.request(generateGoogleAuthToken, {
+      token: cred.credential,
+    });
+    localStorage.setItem("__x_token", data.GoogleVarification || "");
+  }
   return (
     <div className="col-span-3 ">
-      <GoogleLogin onSuccess={(response) => console.log(response)} />
-      hello
+      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
     </div>
   );
 }

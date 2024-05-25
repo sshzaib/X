@@ -37,9 +37,8 @@ const queries = {
           profileImageURL: decode.picture,
         },
       });
-    } else {
-      return "ok";
     }
+
     const payload = { userId: user.id, email: user.email };
     const jwtsecret = "S3cR3T";
 
@@ -49,4 +48,3 @@ const queries = {
 };
 
 export const resolvers = { queries };
-

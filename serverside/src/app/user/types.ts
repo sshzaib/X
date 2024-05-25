@@ -1,5 +1,4 @@
 export const types = `#graphql
-    console.log(decode);
    type User {
     id: ID!
     firstName: String!
