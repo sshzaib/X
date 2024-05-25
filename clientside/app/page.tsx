@@ -1,3 +1,4 @@
+"use client";
 import { BsPerson } from "react-icons/bs";
 import { FaXTwitter } from "react-icons/fa6";
 import { GoHomeFill } from "react-icons/go";
@@ -7,6 +8,7 @@ import { FaRegEnvelope } from "react-icons/fa";
 import React from "react";
 import FeedCard from "@/components/FeedCard";
 import { CiCircleMore } from "react-icons/ci";
+import { GoogleLogin } from "@react-oauth/google";
 
 interface navbarType {
   title: string;
@@ -92,5 +94,9 @@ function XFeed() {
   );
 }
 function PeopleRecommendation() {
-  return <div className="col-span-3 "></div>;
+  return (
+    <div className="col-span-3 ">
+      <GoogleLogin onSuccess={(response) => console.log(response)} />
+    </div>
+  );
 }
