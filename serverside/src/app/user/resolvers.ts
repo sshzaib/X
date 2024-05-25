@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
-import jwt from "jsonwebtoken";
+import { prisma } from "../../clients/db";
+import { JwtService } from "../../services/jwt";
+import { userPayload } from "../../types/types";
 
 interface googleDecodeResult {
   iss: string;
@@ -21,7 +22,6 @@ interface googleDecodeResult {
 const queries = {
   GoogleVarification: async (_: any, { token }: { token: string }) => {
     const googleToken = token;
-    const prisma = new PrismaClient();
     const decode = jwtDecode<googleDecodeResult>(googleToken);
     let user = await prisma.user.findUnique({
       where: {
@@ -38,12 +38,28 @@ const queries = {
         },
       });
     }
-
-    const payload = { userId: user.id, email: user.email };
-    const jwtsecret = "S3cR3T";
-
-    const returnToken = jwt.sign(payload, jwtsecret);
-    return returnToken;
+    const userToken = JwtService.createJwt(user);
+    return userToken;
+  },
+  getCurrentUser: async (
+    parent: any,
+    args: any,
+    { token }: { token: string },
+  ) => {
+    const tokenDecode = JwtService.decodeJwt(token) as userPayload;
+    try {
+      const user = prisma.user.findUnique({
+        where: {
+          email: tokenDecode.email,
+        },
+      });
+      if (!user) {
+        return "no user";
+      }
+      return user;
+    } catch (error) {
+      return "error occured";
+    }
   },
 };
 

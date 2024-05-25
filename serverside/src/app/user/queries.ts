@@ -1,4 +1,4 @@
 export const queries = `#graphql
-    GoogleVarification(token: String!): String 
+    GoogleVarification(token: String!): String
+    getCurrentUser: User 
 `;
-

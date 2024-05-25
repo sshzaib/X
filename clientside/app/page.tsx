@@ -10,8 +10,8 @@ import FeedCard from "@/components/FeedCard";
 import { CiCircleMore } from "react-icons/ci";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { graphqlClient } from "@/clients/api";
-import { generateGoogleAuthToken } from "@/graphql/query/user";
-import { gql, request } from "graphql-request";
+import { getCurrentUser, verifyGoogleOauthToken } from "@/graphql/query/user";
+import { useQuery } from "@tanstack/react-query";
 
 interface navbarType {
   title: string;
@@ -52,8 +52,16 @@ export default function Home() {
     </div>
   );
 }
-
 function Sidebar(): React.ReactNode {
+  async function currentuser() {
+    const response = await graphqlClient.request(
+      getCurrentUser,
+      {},
+      { authorization: localStorage.getItem("__x_token") || "" },
+    );
+    console.log(response.getCurrentUser);
+  }
+  currentuser();
   return (
     <div className="col-span-3 static top-0">
       <div className="cursor-pointer hover:bg-slate-900 w-fit rounded-full p-3 transition-all">
@@ -99,7 +107,7 @@ function XFeed() {
 function PeopleRecommendation() {
   async function handleSuccessGoogleLogin(cred: CredentialResponse) {
     if (!cred || !cred.credential) return console.error("failed to login");
-    const data = await graphqlClient.request(generateGoogleAuthToken, {
+    const data = await graphqlClient.request(verifyGoogleOauthToken, {
       token: cred.credential,
     });
     localStorage.setItem("__x_token", data.GoogleVarification || "");
