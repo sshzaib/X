@@ -97,6 +97,7 @@ function PeopleRecommendation() {
   return (
     <div className="col-span-3 ">
       <GoogleLogin onSuccess={(response) => console.log(response)} />
+      hello
     </div>
   );
 }
