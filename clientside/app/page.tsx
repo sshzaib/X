@@ -5,12 +5,14 @@ import { GoHomeFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { FaRegEnvelope } from "react-icons/fa";
-import React from "react";
+import React, { useState } from "react";
 import FeedCard from "@/components/FeedCard";
 import { CiCircleMore } from "react-icons/ci";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { graphqlClient } from "@/clients/api";
+import { getTokenFromLocalStorage, graphqlClient } from "@/clients/api";
 import { getCurrentUser, verifyGoogleOauthToken } from "@/graphql/query/user";
+import Image from "next/image";
+import { BsThreeDots } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
 
 interface navbarType {
@@ -45,7 +47,7 @@ const navbarList: navbarType[] = [
 ];
 export default function Home() {
   return (
-    <div className="grid grid-cols-12 h-screen w-screen px-36">
+    <div className="grid grid-cols-12 gap-10 h-screen w-screen px-36">
       <Sidebar />
       <XFeed />
       <PeopleRecommendation />
@@ -53,13 +55,27 @@ export default function Home() {
   );
 }
 function Sidebar(): React.ReactNode {
+  const [user, setUser] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    profileImageURL: "",
+  });
   async function currentuser() {
+    const token = getTokenFromLocalStorage();
     const response = await graphqlClient.request(
       getCurrentUser,
       {},
-      { authorization: localStorage.getItem("__x_token") || "" },
+      { authorization: token || "" },
     );
-    console.log(response.getCurrentUser);
+    if (response.getCurrentUser) {
+      setUser({
+        firstName: response.getCurrentUser.firstName ?? "",
+        lastName: response.getCurrentUser.lastName ?? "",
+        email: response.getCurrentUser?.email ?? "",
+        profileImageURL: response.getCurrentUser.profileImageURL ?? "",
+      });
+    }
   }
   currentuser();
   return (
@@ -78,17 +94,35 @@ function Sidebar(): React.ReactNode {
           </li>
         ))}
       </ul>
-      <div className="mr-14 mt-4">
+      <div className="mr-14 mt-4 ">
         <button className="bg-[#1d9bf0] rounded-full w-full py-3.5 font-bold">
           Post
         </button>
+      </div>
+      <div className="absolute bottom-5 flex items-center gap-4 hover:bg-[#181818] cursor-pointer rounded-full p-3 ">
+        <Image
+          src={"https://avatars.githubusercontent.com/u/115782804?v=4"}
+          alt="profile-pic"
+          width={40}
+          height={40}
+          className="rounded-full"
+        />
+        <div className="flex flex-col pr-16">
+          <div className="font-medium">
+            {user.firstName} {user.lastName}
+          </div>
+          <div className="text-[#5D6165]">@shahzaib_hi</div>
+        </div>
+        <div>
+          <BsThreeDots />
+        </div>
       </div>
     </div>
   );
 }
 function XFeed() {
   return (
-    <div className="col-span-6 border-x flex-1 border-slate-600">
+    <div className="col-span-6 border-x flex-1 gap-10 border-slate-600">
       <FeedCard />
       <FeedCard />
       <FeedCard />
