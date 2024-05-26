@@ -13,12 +13,11 @@ import { getTokenFromLocalStorage, graphqlClient } from "@/clients/api";
 import { getCurrentUser, verifyGoogleOauthToken } from "@/graphql/query/user";
 import Image from "next/image";
 import { BsThreeDots } from "react-icons/bs";
-import { useQuery } from "@tanstack/react-query";
+import { navbarType, userState } from "@/types/types";
+import { Textarea } from "@/components/Textarea";
+import { FaGlobeAsia } from "react-icons/fa";
+import { FaRegImage } from "react-icons/fa6";
 
-interface navbarType {
-  title: string;
-  icon: React.ReactNode;
-}
 const navbarList: navbarType[] = [
   {
     title: "Home",
@@ -46,16 +45,7 @@ const navbarList: navbarType[] = [
   },
 ];
 export default function Home() {
-  return (
-    <div className="grid grid-cols-12 gap-10 h-screen w-screen px-36">
-      <Sidebar />
-      <XFeed />
-      <PeopleRecommendation />
-    </div>
-  );
-}
-function Sidebar(): React.ReactNode {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<userState>({
     firstName: "",
     lastName: "",
     email: "",
@@ -78,6 +68,15 @@ function Sidebar(): React.ReactNode {
     }
   }
   currentuser();
+  return (
+    <div className="grid grid-cols-12 gap-10 h-screen w-screen px-36">
+      <Sidebar user={user} />
+      <XFeed user={user} />
+      <PeopleRecommendation />
+    </div>
+  );
+}
+const Sidebar: React.FC<{ user: userState }> = ({ user }) => {
   return (
     <div className="col-span-3 static top-0">
       <div className="cursor-pointer hover:bg-slate-900 w-fit rounded-full p-3 transition-all">
@@ -119,10 +118,50 @@ function Sidebar(): React.ReactNode {
       </div>
     </div>
   );
-}
-function XFeed() {
+};
+
+const XFeed: React.FC<{ user: userState }> = ({ user }) => {
+  const [tweet, setTweet] = useState<string>("");
+  const handleTextareaOnchange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setTweet(e.target.value);
+  };
   return (
-    <div className="col-span-6 border-x flex-1 gap-10 border-slate-600">
+    <div className="col-span-6 border-x flex-1 border-slate-600">
+      <div>
+        <div className="grid grid-cols-12 mt-2 px-4 border-b border-slate-900 ">
+          <div className="col-span-1">
+            <Image
+              src={user.profileImageURL}
+              width={40}
+              height={40}
+              alt="user profile image"
+            />
+          </div>
+          <div className="col-span-11 ">
+            <Textarea
+              placeholder="What is happening?!"
+              value={tweet}
+              onChange={handleTextareaOnchange}
+            />
+            <div className="border-b flex items-center gap-2 font-semibold text-sm border-gray-800 text-[#1D9BF0] pb-4">
+              <FaGlobeAsia />
+              Everone can reply
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="text-[#1D9BF0] text-l hover:bg-[#031018] rounded-full cursor-pointer p-3 ">
+                <FaRegImage />
+              </div>
+              <div className="my-3 ">
+                <button className="bg-[#1d9bf0] rounded-full px-4 py-1.5 font-bold">
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <FeedCard />
       <FeedCard />
       <FeedCard />
@@ -137,7 +176,7 @@ function XFeed() {
       <FeedCard />
     </div>
   );
-}
+};
 function PeopleRecommendation() {
   async function handleSuccessGoogleLogin(cred: CredentialResponse) {
     if (!cred || !cred.credential) return console.error("failed to login");
