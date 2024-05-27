@@ -5,7 +5,9 @@ export const getTokenFromLocalStorage = (): string | null => {
   }
   return null;
 };
+
 const token = getTokenFromLocalStorage();
+
 export const graphqlClient = new GraphQLClient(
   "http://localhost:4000/graphql",
   {

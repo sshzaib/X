@@ -6,6 +6,7 @@ interface TextAreaProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
+
 export function Textarea({
   placeholder = "",
   value = "",

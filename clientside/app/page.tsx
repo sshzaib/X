@@ -9,16 +9,18 @@ import React, { useState } from "react";
 import FeedCard from "@/components/FeedCard";
 import { CiCircleMore } from "react-icons/ci";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { getTokenFromLocalStorage, graphqlClient } from "@/clients/api";
-import { getCurrentUser, verifyGoogleOauthToken } from "@/graphql/query/user";
+import { graphqlClient } from "@/clients/api";
+import { verifyGoogleOauthToken } from "@/graphql/query/user";
 import Image from "next/image";
 import { BsThreeDots } from "react-icons/bs";
-import { navbarType, userState } from "@/types/types";
+import { navbarType } from "@/types/types";
 import { Textarea } from "@/components/Textarea";
 import { FaGlobeAsia } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa6";
-import { useGetAllTweets } from "@/hooks/tweet";
-import { Tweet } from "@/gql/graphql";
+import { useCreateTweet, useGetAllTweets } from "@/hooks/tweet";
+import { useGetCurrentUser } from "@/hooks/user";
+import { Tweet, User } from "@/gql/graphql";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 const navbarList: navbarType[] = [
   {
@@ -47,38 +49,16 @@ const navbarList: navbarType[] = [
   },
 ];
 export default function Home() {
-  const [user, setUser] = useState<userState>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    profileImageURL: "",
-  });
-  async function currentuser() {
-    const token = getTokenFromLocalStorage();
-    const response = await graphqlClient.request(
-      getCurrentUser,
-      {},
-      { authorization: token || "" },
-    );
-    if (response.getCurrentUser) {
-      setUser({
-        firstName: response.getCurrentUser.firstName ?? "",
-        lastName: response.getCurrentUser.lastName ?? "",
-        email: response.getCurrentUser?.email ?? "",
-        profileImageURL: response.getCurrentUser.profileImageURL ?? "",
-      });
-    }
-  }
-  currentuser();
+  const user = useGetCurrentUser();
   return (
     <div className="grid grid-cols-12 gap-10 h-screen w-screen px-36">
-      <Sidebar user={user} />
-      <XFeed user={user} />
+      <Sidebar user={user as User} />
+      <XFeed user={user as User} />
       <PeopleRecommendation />
     </div>
   );
 }
-const Sidebar: React.FC<{ user: userState }> = ({ user }) => {
+const Sidebar: React.FC<{ user: User }> = ({ user }) => {
   return (
     <div className="col-span-3 static top-0">
       <div className="cursor-pointer hover:bg-slate-900 w-fit rounded-full p-3 transition-all">
@@ -101,16 +81,19 @@ const Sidebar: React.FC<{ user: userState }> = ({ user }) => {
         </button>
       </div>
       <div className="absolute bottom-5 flex items-center gap-4 hover:bg-[#181818] cursor-pointer rounded-full p-3 ">
-        <Image
-          src={"https://avatars.githubusercontent.com/u/115782804?v=4"}
-          alt="profile-pic"
-          width={40}
-          height={40}
-          className="rounded-full"
-        />
+        {user?.profileImageURL && (
+          <Image
+            src={user.profileImageURL}
+            alt="profile-pic"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+        )}
+
         <div className="flex flex-col pr-16">
           <div className="font-medium">
-            {user.firstName} {user.lastName}
+            {user?.firstName} {user?.lastName}
           </div>
           <div className="text-[#5D6165]">@shahzaib_hi</div>
         </div>
@@ -122,25 +105,40 @@ const Sidebar: React.FC<{ user: userState }> = ({ user }) => {
   );
 };
 
-const XFeed: React.FC<{ user: userState }> = ({ user }) => {
+const XFeed: React.FC<{ user: User }> = ({ user }) => {
   const [tweet, setTweet] = useState<string>("");
+  const queryClient = useQueryClient();
   const tweets = useGetAllTweets();
   const handleTextareaOnchange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setTweet(e.target.value);
   };
+  const mutation = useCreateTweet();
+  const handlePostTweet = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["Todos"] });
+    const payload = {
+      payload: {
+        content: tweet,
+      },
+    };
+    mutation.mutate(payload);
+    setTweet("");
+  };
   return (
     <div className="col-span-6 border-x flex-1 border-slate-600">
       <div>
         <div className="grid grid-cols-12 mt-2 px-4 border-b border-slate-900 ">
           <div className="col-span-1">
-            <Image
-              src={user.profileImageURL}
-              width={40}
-              height={40}
-              alt="user profile image"
-            />
+            {user?.profileImageURL ? (
+              <Image
+                src={user?.profileImageURL}
+                width={40}
+                height={40}
+                alt="user profile image"
+                className="rounded-full"
+              />
+            ) : null}
           </div>
           <div className="col-span-11 ">
             <Textarea
@@ -157,7 +155,10 @@ const XFeed: React.FC<{ user: userState }> = ({ user }) => {
                 <FaRegImage />
               </div>
               <div className="my-3 ">
-                <button className="bg-[#1d9bf0] rounded-full px-4 py-1.5 font-bold">
+                <button
+                  className="bg-[#1d9bf0] rounded-full px-4 py-1.5 font-bold"
+                  onClick={handlePostTweet}
+                >
                   Post
                 </button>
               </div>
@@ -165,7 +166,9 @@ const XFeed: React.FC<{ user: userState }> = ({ user }) => {
           </div>
         </div>
       </div>
-      {tweets ? tweets.map((tweet) => <FeedCard tweet={tweet} />) : null}
+      {tweets
+        ? tweets.map((tweet) => <FeedCard tweet={tweet as Tweet} />)
+        : null}
     </div>
   );
 };
