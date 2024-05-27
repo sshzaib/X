@@ -1,7 +1,8 @@
 import { jwtDecode } from "jwt-decode";
 import { prisma } from "../../clients/db";
 import { JwtService } from "../../services/jwt";
-import { userPayload } from "../../types/types";
+import { JWTUser } from "../../types/types";
+import { User } from "@prisma/client";
 
 interface googleDecodeResult {
   iss: string;
@@ -44,23 +45,33 @@ const queries = {
   getCurrentUser: async (
     parent: any,
     args: any,
-    { token }: { token: string },
+    { user }: { user: JWTUser },
   ) => {
-    const tokenDecode = JwtService.decodeJwt(token) as userPayload;
     try {
-      const user = prisma.user.findUnique({
+      const existUser = prisma.user.findUnique({
         where: {
-          email: tokenDecode.email,
+          email: user.email,
         },
       });
-      if (!user) {
+      if (!existUser) {
         return "no user";
       }
-      return user;
+      return existUser;
     } catch (error) {
       return "error occured";
     }
   },
 };
-
-export const resolvers = { queries };
+const extraResolvers = {
+  User: {
+    tweets(parent: User) {
+      const tweets = prisma.tweet.findMany({
+        where: {
+          authorId: parent.id,
+        },
+      });
+      return tweets;
+    },
+  },
+};
+export const resolvers = { queries, extraResolvers };

@@ -1,8 +1,8 @@
-export interface contextType {
-  token?: string;
+export interface JWTUser {
+  userId: string;
+  email: string;
 }
 
-export interface userPayload {
-  id: string;
-  email: string;
+export interface GraphQlContext {
+  user?: JWTUser;
 }

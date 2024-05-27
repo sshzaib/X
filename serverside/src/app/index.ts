@@ -4,8 +4,10 @@ import express from "express";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import http from "http";
 import { user } from "./user";
+import { tweet } from "./tweet";
 import cors from "cors";
-import { contextType } from "../types/types";
+import { JwtService } from "../services/jwt";
+import { GraphQlContext } from "../types/types";
 
 export async function initServer() {
   const app = express();
@@ -14,17 +16,28 @@ export async function initServer() {
 
   const typeDefs = `#graphql
     ${user.types}
-  type Query {
-    ${user.queries}
-  }
+    ${tweet.types}
+    type Query {
+      ${user.queries}
+      ${tweet.queries}
+     }
+     type Mutation {
+      ${tweet.mutations}
+     }
 `;
 
   const resolvers = {
     Query: {
       ...user.resolvers.queries,
+      ...tweet.resolvers.queries,
     },
+    Mutation: {
+      ...tweet.resolvers.mutations,
+    },
+    ...tweet.resolvers.extraResolvers,
+    ...user.resolvers.extraResolvers,
   };
-  const server = new ApolloServer<contextType>({
+  const server = new ApolloServer<GraphQlContext>({
     typeDefs,
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -36,7 +49,12 @@ export async function initServer() {
     cors<cors.CorsRequest>(),
     express.json(),
     expressMiddleware(server, {
-      context: async ({ req }) => ({ token: req.headers.authorization }),
+      context: async ({ req }) => {
+        const token = req.headers.authorization?.split(" ")[1] || "";
+        return {
+          user: req.headers.authorization ? JwtService.decodeJwt(token) : null,
+        };
+      },
     }),
   );
 
