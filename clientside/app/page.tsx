@@ -17,6 +17,7 @@ import { navbarType, userState } from "@/types/types";
 import { Textarea } from "@/components/Textarea";
 import { FaGlobeAsia } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa6";
+import { useGetAllTweets } from "@/hooks/tweet";
 
 const navbarList: navbarType[] = [
   {
@@ -122,6 +123,8 @@ const Sidebar: React.FC<{ user: userState }> = ({ user }) => {
 
 const XFeed: React.FC<{ user: userState }> = ({ user }) => {
   const [tweet, setTweet] = useState<string>("");
+  const tweet2 = useGetAllTweets();
+  console.log(tweet2);
   const handleTextareaOnchange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {

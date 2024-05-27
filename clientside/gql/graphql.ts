@@ -16,15 +16,39 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  createTweet?: Maybe<Tweet>;
+};
+
+
+export type MutationCreateTweetArgs = {
+  payload: TweetContent;
+};
+
 export type Query = {
   __typename?: 'Query';
   GoogleVarification?: Maybe<Scalars['String']['output']>;
+  getAllTweets?: Maybe<Array<Maybe<Tweet>>>;
   getCurrentUser?: Maybe<User>;
 };
 
 
 export type QueryGoogleVarificationArgs = {
   token: Scalars['String']['input'];
+};
+
+export type Tweet = {
+  __typename?: 'Tweet';
+  author?: Maybe<User>;
+  content: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  imageURL?: Maybe<Scalars['String']['output']>;
+};
+
+export type TweetContent = {
+  content: Scalars['String']['input'];
+  imageURL?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
@@ -34,7 +58,13 @@ export type User = {
   id: Scalars['ID']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
   profileImageURL?: Maybe<Scalars['String']['output']>;
+  tweets?: Maybe<Array<Maybe<Tweet>>>;
 };
+
+export type GetAllTweetsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllTweetsQuery = { __typename?: 'Query', getAllTweets?: Array<{ __typename?: 'Tweet', content: string, id: string, imageURL?: string | null, author?: { __typename?: 'User', firstName: string, lastName?: string | null, profileImageURL?: string | null } | null } | null> | null };
 
 export type VerifyGoogleOauthTokenQueryVariables = Exact<{
   token: Scalars['String']['input'];
@@ -49,5 +79,6 @@ export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id: string, firstName: string, email: string, profileImageURL?: string | null, lastName?: string | null } | null };
 
 
+export const GetAllTweetsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllTweets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllTweets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"imageURL"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageURL"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllTweetsQuery, GetAllTweetsQueryVariables>;
 export const VerifyGoogleOauthTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"verifyGoogleOauthToken"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"GoogleVarification"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}}]}]}}]} as unknown as DocumentNode<VerifyGoogleOauthTokenQuery, VerifyGoogleOauthTokenQueryVariables>;
 export const GetCurrentUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageURL"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]} as unknown as DocumentNode<GetCurrentUserQuery, GetCurrentUserQueryVariables>;

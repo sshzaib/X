@@ -1,4 +1,4 @@
-import { useAutosizeTextArea } from "@/hooks";
+import { useAutosizeTextArea } from "@/hooks/textarea";
 import { useRef } from "react";
 
 interface TextAreaProps {
