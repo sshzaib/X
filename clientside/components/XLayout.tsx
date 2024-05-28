@@ -5,8 +5,7 @@ import { GoHomeFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { FaRegEnvelope } from "react-icons/fa";
-import React, { ReactNode, useState } from "react";
-import FeedCard from "@/components/FeedCard";
+import React, { useState } from "react";
 import { CiCircleMore } from "react-icons/ci";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { graphqlClient } from "@/clients/api";
@@ -14,13 +13,8 @@ import { verifyGoogleOauthToken } from "@/graphql/query/user";
 import Image from "next/image";
 import { BsThreeDots } from "react-icons/bs";
 import { navbar } from "@/types/types";
-import { Textarea } from "@/components/Textarea";
-import { FaGlobeAsia } from "react-icons/fa";
-import { FaRegImage } from "react-icons/fa6";
-import { useCreateTweet, useGetAllTweets } from "@/hooks/tweet";
 import { useGetCurrentUser } from "@/hooks/user";
-import { Tweet, User } from "@/gql/graphql";
-import { useQueryClient } from "@tanstack/react-query";
+import { User } from "@/gql/graphql";
 
 const navbarList: navbar[] = [
   {

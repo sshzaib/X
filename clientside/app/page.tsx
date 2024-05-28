@@ -9,9 +9,17 @@ import { Tweet, User } from "@/gql/graphql";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import FeedCard from "@/components/FeedCard";
+import { NotAuth } from "@/components/NotAuth";
 
 export default function Home() {
   const user = useGetCurrentUser();
+  if (!user) {
+    return (
+      <div>
+        <NotAuth />
+      </div>
+    );
+  }
   return (
     <div>
       <XFeed user={user as User} />
