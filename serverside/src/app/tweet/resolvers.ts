@@ -10,7 +10,11 @@ interface CreateTweetPayload {
 const queries = {
   getAllTweets: async (parent: any, args: any, ctx: GraphQlContext) => {
     if (ctx.user?.userId) {
-      const tweets = await prisma.tweet.findMany();
+      const tweets = await prisma.tweet.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
       return tweets;
     }
   },
