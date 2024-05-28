@@ -54,13 +54,13 @@ export const XLayout: React.FC<{ children: React.ReactNode }> = ({
   const user = useGetCurrentUser();
   return (
     <div className="grid grid-cols-12 gap-10 h-screen w-screen px-36">
-      <div className="col-span-3 static top-0">
+      <div className="col-span-3 h-screen sticky top-0">
         <Sidebar user={user as User} />
       </div>
-      <div className="col-span-6 border-x flex-1 border-slate-600">
+      <div className="col-span-6 border-x flex-1 border-slate-600 overflow-y-auto">
         {children}
       </div>
-      <div className="col-span-3 ">
+      <div className="col-span-3 overflow-y-auto">
         <PeopleRecommendation />
       </div>
     </div>
@@ -123,6 +123,34 @@ function PeopleRecommendation() {
   }
   return (
     <div>
+      <div className="p-4">
+        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      </div>
+      <div className="p-4">
+        <div className="p-4">
+          <div className="p-4">
+            <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+          </div>
+          <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+        </div>
+        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      </div>
+      <div className="p-4">
+        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      </div>
+      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      <div className="p-4">
+        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      </div>
+      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      <div className="p-4">
+        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      </div>
+      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
       <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
     </div>
   );
