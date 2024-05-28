@@ -53,14 +53,14 @@ export const XLayout: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const user = useGetCurrentUser();
   return (
-    <div className="grid grid-cols-12 gap-10 h-screen w-screen ">
-      <div className="col-span-3 h-screen sticky top-0">
+    <div className="grid grid-cols-12 h-screen w-screen">
+      <div className="col-span-3 h-screen sticky top-0 flex justify-end pr-10">
         <Sidebar user={user as User} />
       </div>
       <div className="col-span-9 h-screen overflow-y-auto">
         <div className="grid grid-cols-12 h-full">
-          <div className="col-span-8 border-x border-slate-600">{children}</div>
-          <div className="col-span-4">
+          <div className="col-span-6 border-x border-slate-600">{children}</div>
+          <div className="col-span-6">
             <PeopleRecommendation />
           </div>
         </div>
@@ -85,7 +85,7 @@ const Sidebar: React.FC<{ user: User }> = ({ user }) => {
           </li>
         ))}
       </ul>
-      <div className="mr-14 mt-4 ">
+      <div className="mt-4 ">
         <button className="bg-[#1d9bf0] rounded-full w-full py-3.5 font-bold">
           Post
         </button>
@@ -100,9 +100,8 @@ const Sidebar: React.FC<{ user: User }> = ({ user }) => {
             className="rounded-full"
           />
         )}
-
-        <div className="flex flex-col pr-16">
-          <div className="font-medium">
+        <div className="flex flex-col ">
+          <div className="font-medium flex">
             {user?.firstName} {user?.lastName}
           </div>
           <div className="text-[#5D6165]">@shahzaib_hi</div>
@@ -116,6 +115,7 @@ const Sidebar: React.FC<{ user: User }> = ({ user }) => {
 };
 
 function PeopleRecommendation() {
+  const [search, setSearch] = useState("");
   async function handleSuccessGoogleLogin(cred: CredentialResponse) {
     if (!cred || !cred.credential) return console.error("failed to login");
     const data = await graphqlClient.request(verifyGoogleOauthToken, {
@@ -124,44 +124,17 @@ function PeopleRecommendation() {
     localStorage.setItem("__x_token", data.GoogleVarification || "");
   }
   return (
-    <div>
-      <div className="p-4">
-        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+    <div className="ml-8 flex flex-col w-[23rem] mt-1">
+      <div className="bg-[#202327] w-full p-3 focus:outline-red-200 flex items-center gap-4 rounded-full ">
+        <IoSearch className="text-slate-500 text-xl" />
+        <input
+          type="text"
+          value={search}
+          className="bg-[#202327] w-full focus:outline-none "
+          placeholder="Search"
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
-      <div className="p-4">
-        <div className="p-4">
-          <div className="p-4">
-            <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-          </div>
-          <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-        </div>
-        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      </div>
-      <div className="p-4">
-        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      </div>
-      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      <div className="p-4">
-        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      </div>
-      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      <div className="p-4">
-        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      </div>
-      <div className="p-4">
-        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      </div>
-      <div className="p-4">
-        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      </div>
-      <div className="p-4">
-        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      </div>
-      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
-      <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
       <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
     </div>
   );
