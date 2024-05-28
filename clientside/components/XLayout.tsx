@@ -53,15 +53,17 @@ export const XLayout: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const user = useGetCurrentUser();
   return (
-    <div className="grid grid-cols-12 gap-10 h-screen w-screen px-36">
+    <div className="grid grid-cols-12 gap-10 h-screen w-screen ">
       <div className="col-span-3 h-screen sticky top-0">
         <Sidebar user={user as User} />
       </div>
-      <div className="col-span-6 border-x flex-1 border-slate-600 overflow-y-auto">
-        {children}
-      </div>
-      <div className="col-span-3 overflow-y-auto">
-        <PeopleRecommendation />
+      <div className="col-span-9 h-screen overflow-y-auto">
+        <div className="grid grid-cols-12 h-full">
+          <div className="col-span-8 border-x border-slate-600">{children}</div>
+          <div className="col-span-4">
+            <PeopleRecommendation />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -143,6 +145,15 @@ function PeopleRecommendation() {
         <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
       </div>
       <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      <div className="p-4">
+        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      </div>
+      <div className="p-4">
+        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      </div>
+      <div className="p-4">
+        <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
+      </div>
       <div className="p-4">
         <GoogleLogin onSuccess={handleSuccessGoogleLogin} />
       </div>
