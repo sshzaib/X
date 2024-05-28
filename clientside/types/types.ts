@@ -4,7 +4,7 @@ export interface userState {
   email: string;
   profileImageURL: string;
 }
-export interface navbarType {
+export interface navbar {
   title: string;
   icon: React.ReactNode;
 }
