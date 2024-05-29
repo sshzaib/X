@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { prisma } from "../../clients/db";
 import { JwtService } from "../../services/jwt";
-import { JWTUser } from "../../types/types";
+import { GraphQlContext, JWTUser } from "../../types/types";
 import { User } from "@prisma/client";
 
 interface googleDecodeResult {
@@ -24,33 +24,48 @@ const queries = {
   GoogleVarification: async (_: any, { token }: { token: string }) => {
     const googleToken = token;
     const decode = jwtDecode<googleDecodeResult>(googleToken);
-    let user = await prisma.user.findUnique({
-      where: {
-        email: decode.email,
-      },
-    });
+    let user;
+    try {
+      user = await prisma.user.findUnique({
+        where: {
+          email: decode.email,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
     if (!user) {
+      let isUsername = true;
+      let username;
+      do {
+        username = `${decode.given_name}${Math.floor(Math.random() * (200000 - 100000) + 100000)}`;
+        const usernameExists = await prisma.user.findUnique({
+          where: {
+            username,
+          },
+        });
+        if (!usernameExists) {
+          isUsername = false;
+        }
+      } while (isUsername);
       user = await prisma.user.create({
         data: {
           firstName: decode.given_name,
           lastName: decode.family_name,
+          username: username,
           email: decode.email,
           profileImageURL: decode.picture,
         },
       });
     }
-    const userToken = JwtService.createJwt(user);
-    return userToken;
+    const JwtToken = JwtService.createJwt(user);
+    return JwtToken;
   },
-  getCurrentUser: async (
-    parent: any,
-    args: any,
-    { user }: { user: JWTUser },
-  ) => {
+  getCurrentUser: async (parent: any, args: any, context: GraphQlContext) => {
     try {
       const existUser = prisma.user.findUnique({
         where: {
-          email: user.email,
+          email: context.user?.email,
         },
       });
       if (!existUser) {

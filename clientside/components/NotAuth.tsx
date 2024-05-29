@@ -1,14 +1,26 @@
+"use client";
 import { graphqlClient } from "@/clients/api";
+import { useRouter } from "next/navigation";
 import { verifyGoogleOauthToken } from "@/graphql/query/user";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { FaXTwitter } from "react-icons/fa6";
+
 export const NotAuth = () => {
+  const router = useRouter();
+
   async function handleSuccessGoogleLogin(cred: CredentialResponse) {
     if (!cred || !cred.credential) return console.error("failed to login");
     const data = await graphqlClient.request(verifyGoogleOauthToken, {
       token: cred.credential,
     });
-    localStorage.setItem("__x_token", data.GoogleVarification || "");
+    if (data) {
+      localStorage.setItem(
+        "__x_token",
+        `Bearer ${data.GoogleVarification}` || "",
+      );
+      console.log("success");
+      router.push("/i/flow/signup");
+    }
   }
 
   return (

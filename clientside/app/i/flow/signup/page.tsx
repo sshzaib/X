@@ -1,4 +1,5 @@
 "use client";
+import Home from "@/app/page";
 import { NotAuth } from "@/components/NotAuth";
 import { FaXTwitter } from "react-icons/fa6";
 export default function page() {
@@ -40,7 +41,7 @@ export default function page() {
             </div>
           </div>
         </div>
-        <NotAuth />
+        <Home />
       </div>
     </div>
   );
