@@ -63,6 +63,7 @@ const queries = {
   },
   getCurrentUser: async (parent: any, args: any, context: GraphQlContext) => {
     try {
+      console.log("inside server");
       const existUser = prisma.user.findUnique({
         where: {
           email: context.user?.email,
@@ -74,6 +75,21 @@ const queries = {
       return existUser;
     } catch (error) {
       return "error occured";
+    }
+  },
+  getUserByUsername: async (
+    parent: any,
+    { username }: { username: string },
+  ) => {
+    try {
+      const user = await prisma.user.findFirst({
+        where: {
+          username,
+        },
+      });
+      return user;
+    } catch (error) {
+      return { error };
     }
   },
 };
