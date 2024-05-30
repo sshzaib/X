@@ -10,25 +10,38 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import FeedCard from "@/components/FeedCard";
 import { NotAuth } from "@/components/NotAuth";
+import { XLayout } from "@/components/XLayout";
+import { FaXTwitter } from "react-icons/fa6";
 
 export default function Home() {
-  const user = useGetCurrentUser();
-  if (!user) {
+  const { data, isLoading } = useGetCurrentUser();
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <FaXTwitter className="text-6xl" />
+      </div>
+    );
+  }
+  if (data) {
+    return (
+      <div>
+        <XLayout>
+          <XFeed user={data as User} />
+        </XLayout>
+      </div>
+    );
+  } else {
     return (
       <div>
         <NotAuth />
       </div>
     );
   }
-  return (
-    <div>
-      <XFeed user={user as User} />
-    </div>
-  );
 }
+
 const XFeed: React.FC<{ user: User }> = ({ user }) => {
-  const [tweet, setTweet] = useState<string>("");
   const queryClient = useQueryClient();
+  const [tweet, setTweet] = useState<string>("");
   const tweets = useGetAllTweets();
   const handleTextareaOnchange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -77,7 +90,7 @@ const XFeed: React.FC<{ user: User }> = ({ user }) => {
               </div>
               <div className="my-3 ">
                 <button
-                  className="bg-[#1d9bf0] rounded-full px-4 py-1.5 font-bold"
+                  className="bg-[#1d9bf0]   rounded-full px-4 py-1.5 font-bold"
                   onClick={handlePostTweet}
                 >
                   Post

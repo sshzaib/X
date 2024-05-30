@@ -19,8 +19,13 @@ export default function FeedCard({ tweet }: { tweet: Tweet }) {
         ) : null}
       </div>
       <div className="col-span-11 ml-2 cursor-pointer ">
-        <div className="hover:underline font-semibold w-fit">
-          {tweet.author?.firstName} {tweet.author?.lastName}
+        <div className="flex items-center gap-2">
+          <div className="hover:underline font-semibold w-fit">
+            {tweet.author?.firstName} {tweet.author?.lastName}
+          </div>
+          <div className="text-sm text-[#696E72]">
+            @{tweet.author?.username}
+          </div>
         </div>
         <div> {tweet.content}</div>
         <div className="flex justify-between pr-20">

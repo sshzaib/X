@@ -45,11 +45,12 @@ const navbarList: navbar[] = [
 export const XLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const user = useGetCurrentUser();
+  const { data } = useGetCurrentUser();
+  console.log(data);
   return (
     <div className="grid grid-cols-12 h-screen w-screen">
       <div className="col-span-3 h-screen sticky top-0 flex justify-end pr-10">
-        <Sidebar user={user as User} />
+        <Sidebar user={data as User} />
       </div>
       <div className="col-span-9 h-screen overflow-y-auto">
         <div className="grid grid-cols-12 h-full">
@@ -95,10 +96,10 @@ const Sidebar: React.FC<{ user: User }> = ({ user }) => {
           />
         )}
         <div className="flex flex-col ">
-          <div className="font-medium flex">
+          <div className="font-medium flex text-sm">
             {user?.firstName} {user?.lastName}
           </div>
-          <div className="text-[#5D6165]">@shahzaib_hi</div>
+          <div className="text-[#5D6165] text-sm">@{user?.username}</div>
         </div>
         <div>
           <BsThreeDots />

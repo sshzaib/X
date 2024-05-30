@@ -17,8 +17,10 @@ interface variablesTypes {
     imageURL?: string;
   };
 }
+
+const queryClient = new QueryClient();
+
 export const useCreateTweet = () => {
-  const queryClient = new QueryClient();
   const createTweetMutation = useMutation({
     mutationFn: async (variables: variablesTypes) =>
       await graphqlClient.request(createTweet, variables),
