@@ -23,7 +23,7 @@ export default function FeedCard({ tweet }: { tweet: Tweet }) {
           <div className="hover:underline font-semibold w-fit">
             {tweet.author?.firstName} {tweet.author?.lastName}
           </div>
-          <div className="text-sm text-[#696E72]">
+          <div className="text-sm text-[#5D6165]">
             @{tweet.author?.username}
           </div>
         </div>

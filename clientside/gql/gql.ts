@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation createTweet($payload: TweetContent!) {\n    createTweet(payload: $payload) {\n      id\n    }\n  }\n": types.CreateTweetDocument,
-    "\n  query GetAllTweets {\n    getAllTweets {\n      content\n      id\n      imageURL\n      author {\n        firstName\n        lastName\n        profileImageURL\n      }\n    }\n  }\n": types.GetAllTweetsDocument,
+    "\n  query GetAllTweets {\n    getAllTweets {\n      content\n      id\n      imageURL\n      author {\n        firstName\n        lastName\n        profileImageURL\n        username\n      }\n    }\n  }\n": types.GetAllTweetsDocument,
     "\n  query verifyGoogleOauthToken($token: String!) {\n    GoogleVarification(token: $token)\n  }\n": types.VerifyGoogleOauthTokenDocument,
     "\n  query GetCurrentUser {\n    getCurrentUser {\n      id\n      firstName\n      email\n      username\n      profileImageURL\n      lastName\n    }\n  }\n": types.GetCurrentUserDocument,
     "\n  query GetUserByUsername($username: String) {\n    getUserByUsername(username: $username) {\n      firstName\n      lastName\n      profileImageURL\n      username\n      createdAt\n      tweets {\n        content\n        imageURL\n        id\n        author {\n          firstName\n          lastName\n          profileImageURL\n          username\n        }\n      }\n    }\n  }\n": types.GetUserByUsernameDocument,
@@ -41,7 +41,7 @@ export function graphql(source: "\n  mutation createTweet($payload: TweetContent
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetAllTweets {\n    getAllTweets {\n      content\n      id\n      imageURL\n      author {\n        firstName\n        lastName\n        profileImageURL\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetAllTweets {\n    getAllTweets {\n      content\n      id\n      imageURL\n      author {\n        firstName\n        lastName\n        profileImageURL\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query GetAllTweets {\n    getAllTweets {\n      content\n      id\n      imageURL\n      author {\n        firstName\n        lastName\n        profileImageURL\n        username\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetAllTweets {\n    getAllTweets {\n      content\n      id\n      imageURL\n      author {\n        firstName\n        lastName\n        profileImageURL\n        username\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
