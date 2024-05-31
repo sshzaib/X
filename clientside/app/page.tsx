@@ -102,33 +102,26 @@ const XFeed: React.FC<{ user: User }> = ({ user }) => {
   };
 
   return (
-    <div className="grid grid-cols-12 mt-2 px-4 border-b border-slate-900 ">
-      <div className="col-span-1">
-        {user?.profileImageURL ? (
-          <Image
-            src={user?.profileImageURL}
-            width={40}
-            height={40}
-            alt="user profile image"
-            className="rounded-full"
-          />
-        ) : null}
-      </div>
-      <div className="col-span-11 ">
-        <Textarea
-          placeholder="What is happening?!"
-          value={tweet}
-          onChange={handleTextareaOnchange}
-        />
-        <div className="border-b flex items-center gap-2 font-semibold text-sm border-gray-800 text-[#1D9BF0] pb-4">
-          <FaGlobeAsia />
-          Everone can reply
-        </div>
-        <div className="flex items-center justify-between">
-          <div className="text-[#1D9BF0] text-l hover:bg-[#031018] rounded-full cursor-pointer p-3 ">
-            <FaRegImage />
+    <div>
+      <div>
+        <div className="grid grid-cols-12 mt-2 px-4 border-b border-slate-900 ">
+          <div className="col-span-1">
+            {user?.profileImageURL ? (
+              <Image
+                src={user?.profileImageURL}
+                width={40}
+                height={40}
+                alt="user profile image"
+                className="rounded-full"
+              />
+            ) : null}
           </div>
-          <div className="my-3 ">
+          <div className="col-span-11 ">
+            <Textarea
+              placeholder="What is happening?!"
+              value={tweet}
+              onChange={handleTextareaOnchange}
+            />
             {imageURL && (
               <Image
                 src={imageURL}
