@@ -28,6 +28,16 @@ export default function FeedCard({ tweet }: { tweet: Tweet }) {
           </div>
         </div>
         <div> {tweet.content}</div>
+        <div>
+          {tweet.imageURL && (
+            <Image
+              src={tweet.imageURL}
+              alt="tweet-image"
+              width={300}
+              height={300}
+            />
+          )}
+        </div>
         <div className="flex justify-between pr-20">
           <div className="text-xl text-slate-500 hover:text-[#1d9bf0] hover:bg-[#0a171f] rounded-full p-2 transition-all">
             <FaRegComment />

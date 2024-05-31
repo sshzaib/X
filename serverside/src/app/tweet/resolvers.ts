@@ -35,7 +35,7 @@ const queries = {
     if (!ctx.user || !ctx.user.userId) {
       throw new Error("Unauthenticated");
     }
-    const allowedImageTypes = ["jpg", "jpeg", "png", "webp"];
+    const allowedImageTypes = ["jpg", "jpeg", "image/png", "webp"];
     if (!allowedImageTypes.includes(imageType))
       throw new Error("Image type not supported");
     const putObjectCommand = new PutObjectCommand({
