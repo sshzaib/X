@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "bucket-twitter-app.s3.ap-south-1.amazonaws.com",
+      },
     ],
   },
 };
