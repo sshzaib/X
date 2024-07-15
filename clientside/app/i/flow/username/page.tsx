@@ -27,7 +27,7 @@ export default function page() {
                 </div>
               </div>
               <input
-                className="block w-full pt-7 pb-3 bg-transparent ps-7 text-md text-white border border-[#6D7277] rounded-lg"
+                className="block w-full pt-7 pb-3 bg-transparent ps-9 text-md text-white border border-[#6D7277] rounded-lg"
                 placeholder="Username"
               />
             </div>

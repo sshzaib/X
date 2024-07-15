@@ -15,31 +15,38 @@ import { BsThreeDots } from "react-icons/bs";
 import { navbar } from "@/types/types";
 import { useGetCurrentUser } from "@/hooks/user";
 import { User } from "@/gql/graphql";
+import { useRouter } from "next/navigation";
 
 const navbarList: navbar[] = [
   {
     title: "Home",
     icon: <GoHomeFill />,
+    navigate: "/",
   },
   {
     title: "Explore",
     icon: <IoSearch />,
+    navigate: "",
   },
   {
     title: "Notifications",
     icon: <IoNotificationsOutline />,
+    navigate: "",
   },
   {
     title: "Messages",
     icon: <FaRegEnvelope />,
+    navigate: "",
   },
   {
     title: "Profile",
     icon: <BsPerson />,
+    navigate: "",
   },
   {
     title: "More",
     icon: <CiCircleMore />,
+    navigate: "",
   },
 ];
 export const XLayout: React.FC<{ children: React.ReactNode }> = ({
@@ -64,6 +71,7 @@ export const XLayout: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 const Sidebar: React.FC<{ user: User }> = ({ user }) => {
+  const router = useRouter();
   return (
     <div>
       <div className="cursor-pointer hover:bg-slate-900 w-fit rounded-full p-3 transition-all">
@@ -75,8 +83,13 @@ const Sidebar: React.FC<{ user: User }> = ({ user }) => {
             key={item.title}
             className="cursor-pointer flex items-center gap-4 text-xl justify-center hover:bg-slate-900 w-fit rounded-full transition-all p-3 pr-7 "
           >
-            <span className="text-3xl">{item.icon}</span>
-            <span>{item.title}</span>
+            <button
+              onClick={() => router.push(`/${user.username}`)}
+              className="flex"
+            >
+              <span className="text-3xl">{item.icon}</span>
+              <span>{item.title}</span>
+            </button>
           </li>
         ))}
       </ul>

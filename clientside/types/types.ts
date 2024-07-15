@@ -7,4 +7,5 @@ export interface userState {
 export interface navbar {
   title: string;
   icon: React.ReactNode;
+  navigate: string;
 }
